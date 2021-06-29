@@ -1,5 +1,6 @@
 package com.sampleAuth.server.security;
 
+import com.sampleAuth.server.service.ClientRegistrationService;
 import com.sampleAuth.server.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import static com.sampleAuth.server.enums.StringConstant.*;
 public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapter {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    ClientRegistrationService registrationService;
     @Autowired
     DataSource dataSource;
     @Autowired
@@ -54,8 +57,7 @@ public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapt
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-         clients.inMemory().withClient(cliendId).secret(passwordEncoder.encode(clientSecret)).scopes("read", "write")
-                 .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(50).refreshTokenValiditySeconds(100);
+         clients.withClientDetails(registrationService);
     }
 
     @Override

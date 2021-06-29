@@ -1,5 +1,6 @@
 package com.sampleAuth.server.models;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.*;
 
-@Setter
-@NoArgsConstructor
 public class Clients implements ClientDetails  {
 
     private String clientId;
@@ -98,5 +97,49 @@ public class Clients implements ClientDetails  {
     @Override
     public Map<String, Object> getAdditionalInformation() {
         return this.additionalInformation;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    public void setScope(Set<String> scope) {
+        this.scope = scope;
+    }
+
+    public void setResourceIds(Set<String> resourceIds) {
+        this.resourceIds = resourceIds;
+    }
+
+    public void setAuthorizedGrantTypes(Set<String> authorizedGrantTypes) {
+        this.authorizedGrantTypes = authorizedGrantTypes;
+    }
+
+    public void setRegisteredRedirectUris(Set<String> registeredRedirectUris) {
+        this.registeredRedirectUris = registeredRedirectUris;
+    }
+
+    public void setAutoApproveScopes(Set<String> autoApproveScopes) {
+        this.autoApproveScopes = autoApproveScopes;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
+        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
+    }
+
+    public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
+        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
+    }
+
+    public void setAdditionalInformation(Map<String, Object> additionalInformation) {
+        this.additionalInformation = additionalInformation;
     }
 }

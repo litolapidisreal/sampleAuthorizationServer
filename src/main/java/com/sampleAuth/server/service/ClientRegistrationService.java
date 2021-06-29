@@ -1,12 +1,16 @@
 package com.sampleAuth.server.service;
 
+import com.sampleAuth.server.models.CustomClient;
 import com.sampleAuth.server.models.User;
+import com.sampleAuth.server.repository.ClientRepository;
 import com.sampleAuth.server.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
@@ -17,32 +21,43 @@ import java.util.Optional;
 
 @Service
 public class ClientRegistrationService implements ClientDetailsService {
-
+    @Autowired
+    ClientRepository clientRepository;
+    @Autowired
+    ClientConverterService clientConverterService;
 
     private final String MESSAGE = "The username or password you've entered is incorrect";
-    private final UserRepository userRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public ClientRegistrationService(final UserRepository userRepository,
-                                     final BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public ClientRegistrationService(final BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Boolean checkByUserUniqueness(User user) {
-        return !userRepository.findByEmail(user.getEmail()).isPresent()
-                && !userRepository.findByUserName(user.getUsername()).isPresent();
+    public Boolean checkByUserUniqueness(CustomClient client) {
+        return !clientRepository.findByClientId(client.getClientId()).isPresent();
     }
 
-    public User saveUser(User user){
-        user.setPassWord(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setDateCreated(new Date());
-        userRepository.save(user);
-        return userRepository.findByEmail(user.getEmail()).get();
+    public CustomClient saveUser(CustomClient client){
+        client.setClientSecret(bCryptPasswordEncoder.encode(client.getClientSecret()));
+        clientRepository.save(client);
+        return client;
+    }
+
+    public CustomClient sampleClient(){
+        CustomClient client = new CustomClient();
+        client.setClientId("SAMPLE_01");
+        client.setClientSecret(bCryptPasswordEncoder.encode("hard_password"));
+        client.setAuthorities("ADMIN");
+        clientRepository.save(client);
+        return client;
     }
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        return null;
+        return clientConverterService.convertFromCustom2Client(
+                clientRepository.findByClientId(clientId)
+                        .orElseThrow(() -> new ClientRegistrationException(
+                                        "Invalid Token! Please double check code!")));
     }
 }

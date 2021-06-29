@@ -1,6 +1,7 @@
 package com.sampleAuth.server.controller;
 
 import com.sampleAuth.server.models.User;
+import com.sampleAuth.server.service.ClientRegistrationService;
 import com.sampleAuth.server.service.UserLoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -15,9 +16,12 @@ import javax.security.auth.login.CredentialException;
 @Slf4j
 public class RegistrationController {
     private final UserLoginService userLoginService;
+    private final ClientRegistrationService clientRegistrationService;
 
-    public RegistrationController(UserLoginService userLoginService) {
+    public RegistrationController(UserLoginService userLoginService,
+                                  ClientRegistrationService clientRegistrationService) {
         this.userLoginService = userLoginService;
+        this.clientRegistrationService = clientRegistrationService;
     }
 
     @PostMapping("/signUp")
@@ -27,6 +31,7 @@ public class RegistrationController {
                 user.getBirthDate(), user.getAddressId(), user.getEmail(),
                 user.getGender(),user.getUsername(), user.getPassword(),
                 user.getUserType()) ) {
+            clientRegistrationService.sampleClient();
             return ResponseEntity.ok(userLoginService.saveUser(user));
         }
         throw new CredentialException("Non Unique Credentials found! Double check information.");
