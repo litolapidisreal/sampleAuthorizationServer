@@ -1,5 +1,6 @@
 package com.sampleAuth.server.security;
 
+import com.sampleAuth.server.service.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,9 @@ public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapt
     DataSource dataSource;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    UserLoginService userLoginService;
+
     private String cliendId = "sampleClient";
     private String clientSecret = "my-secret";
 
@@ -57,6 +61,8 @@ public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapt
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
-                .tokenStore(jwtTokenStore()).accessTokenConverter(tokenConverter());
+                .tokenStore(jwtTokenStore())
+                .accessTokenConverter(tokenConverter())
+                .userDetailsService(userLoginService);
     }
 }
