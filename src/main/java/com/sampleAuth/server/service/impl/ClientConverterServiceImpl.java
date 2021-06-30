@@ -3,7 +3,6 @@ package com.sampleAuth.server.service.impl;
 import com.sampleAuth.server.models.Clients;
 import com.sampleAuth.server.models.CustomClient;
 import com.sampleAuth.server.service.ClientConverterService;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,7 +10,7 @@ import java.util.*;
 import static com.sampleAuth.server.enums.UserEnum.findByAbbr;
 
 @Service
-public class ClientConverterServiceImpl implements ClientConverterService {
+public class  ClientConverterServiceImpl implements ClientConverterService {
    @Override
     public Clients convertFromCustom2Client(CustomClient client) {
         Clients trueClient = new Clients();

@@ -35,7 +35,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register/signUp","/authenticate", "/h2-ui/**").permitAll()
 //                .antMatchers(HttpMethod.POST,)
                 .anyRequest().authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()
 //                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
